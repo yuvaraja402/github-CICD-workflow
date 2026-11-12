@@ -1,0 +1,36 @@
+name: Publish development release
+on:
+  push:
+    branches: [dev]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run tests
+        run: |
+          python3 -m unittest discover -s tests -v
+          node --check static/app.js
+      - name: Package application
+        run: |
+          mkdir -p dist/kubescope
+          cp server.py README.md SECURITY.md CONTRIBUTING.md RELEASE_NOTES.md VERSION start-demo.sh start-live.sh dist/kubescope/
+          cp -r static tests dist/kubescope/
+          (cd dist && zip -qr "KubeScope-$(cat ../VERSION).zip" kubescope -x '*/__pycache__/*')
+      - name: Publish pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(cat VERSION)
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "$VERSION is already published"
+            exit 0
+          fi
+          gh release create "$VERSION" "dist/KubeScope-$VERSION.zip" --target "$GITHUB_SHA" --title "KubeScope $VERSION (development)" --notes-file RELEASE_NOTES.md --prerelease

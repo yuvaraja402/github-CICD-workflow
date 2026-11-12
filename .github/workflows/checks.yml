@@ -1,0 +1,32 @@
+name: Dev checks
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Backend tests
+        run: python3 -m unittest discover -s tests -v
+      - name: JavaScript syntax
+        run: node --check static/app.js
+      - name: Check the base UI does not pull assets from a CDN
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('static/index.html').read_text()
+          assert 'https://' not in html and 'http://' not in html
+          assert 'src="/app.js"' in html
+          assert 'href="/app.css"' in html
+          PY
