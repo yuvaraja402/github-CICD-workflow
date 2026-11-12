@@ -1,0 +1,47 @@
+name: Publish offline-only demo
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out safe development branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Check out archived v1.0.1 UI as build input
+        uses: actions/checkout@v4
+        with:
+          ref: v1.0.1
+          path: legacy
+          persist-credentials: false
+      - name: Generate the static, no-network demo
+        run: python3 scripts/build_offline_demo.py
+      - name: Verify demo has no command or network APIs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          html=Path('demo/index.html').read_text()
+          assert "connect-src 'none'" in html
+          assert 'No commands are executed' in html
+          for blocked in ('fetch(', 'XMLHttpRequest', 'WebSocket', 'navigator.', 'localStorage', 'sessionStorage', 'subprocess', 'run_kubectl('):
+              assert blocked not in html, blocked
+          print('Static demo safety checks passed.')
+          PY
+      - name: Commit standalone demo to dev
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add demo/index.html demo/README.md
+          git diff --cached --quiet || (git commit -m "Add bundled offline demo" && git push origin HEAD:dev)
+      - name: Replace v1.0.1 release downloads with safe demo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload v1.0.1 KubeScope-v1.0.1-OFFLINE-DEMO.zip --clobber
+          gh release delete-asset v1.0.1 KubeScope-v1.0.1.zip --yes || true
+          gh release edit v1.0.1 --title "KubeScope v1.0.1 — Offline Demo" --notes-file RELEASE_NOTES.md --prerelease

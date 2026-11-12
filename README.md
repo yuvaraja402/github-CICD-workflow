@@ -1,98 +1,25 @@
-# KubeScope
+# KubeScope — offline demo
 
-A local Kubernetes workbench for figuring out which cluster you're in, what's running, and what needs a closer look.
+KubeScope is an early visual concept for understanding Kubernetes clusters: a cluster overview, a relationship map, workload lists, node details, events, and a guided command preview.
 
-![KubeScope overview](docs/screenshots/overview.jpg)
+**This development branch distributes only a static demo.** Nothing in the demo connects to Kubernetes or executes commands. All context names, workloads, command output and events are sample data.
 
-> **Development build — v1.0.1.** This is a read-only prototype for individual developers. It isn't a hosted dashboard or a production-ready multi-user tool.
+## Try it
 
-## Try it without a cluster
+Download **KubeScope-v1.0.1-OFFLINE-DEMO.zip** from the v1.0.1 GitHub release. Unzip it, then open **index.html** in your browser. There is no installation, server, Python runtime, kubectl, Docker, account or internet requirement.
 
-From this folder:
+The UI has an in-page light/dark switch. The choice is not stored in the browser. The only activity is rendering the example interface.
 
-```bash
-python3 server.py --demo
-```
+## Why we separated the demo
 
-Open http://127.0.0.1:8765. The demo uses sample resources. Nothing connects to Kubernetes.
+Earlier KubeScope development builds contained a local server with live Kubernetes inspection capabilities. That is not appropriate for a no-impact product preview. The demo is therefore a **separate file** with all resources embedded and the browser configured to deny network connections.
 
-## Use your own cluster
+The historical v1.0.1 source tag predates this change and should not be used for demo testing. Use the explicitly named OFFLINE-DEMO download instead. The `dev` branch now contains only demo documentation, the build script and its release workflow, not the live backend.
 
-You'll need Python 3.10+, `kubectl`, a working kubeconfig, and permission to inspect the resources you're interested in. There are no pip, npm, font, or CDN dependencies.
+The `main` branch is kept documentation-focused.
 
-```bash
-kubectl config get-contexts
-kubectl get nodes
-python3 server.py
-```
+## What this does not do
 
-Open http://127.0.0.1:8765, then choose a context from the top-right menu. KubeScope passes the selected context to each command, so it **doesn't change your global kubectl context**.
+It does not inspect the host, read kubeconfig or credentials, access Kubernetes, read local files, save preferences, open network sockets, or change anything on a cluster. The command preview is illustrative only.
 
-If port 8765 is taken, use `python3 server.py --port 8989`. Windows users can run `py server.py --demo` or `py server.py`.
-
-## What's inside
-
-- **Overview:** Active context, API endpoint, Kubernetes version, cloud/runtime hints, node and workload health, and namespace shortcuts.
-- **Cluster map:** Click through namespaces, workloads, pods, services, and nodes. Some links are inferred from selectors, so they're a starting point, not an authoritative network trace.
-- **Workloads:** Filter and inspect Deployments, StatefulSets, DaemonSets, Pods, Services, Ingresses, Jobs, CronJobs, and PVCs.
-- **Nodes & system:** Check readiness, role, OS, runtime, kubelet version, and reported capacity.
-- **Issues & events:** Find warning events and resources that aren't ready.
-- **Command center:** Generate and run approved read-only commands instead of typing them manually. You can inspect resources, view pod logs, check rollout status, and look at metrics when the metrics API is present.
-
-The new UI uses a lightweight, original SVG cluster illustration and CSS. There's no 3D engine to install, and no third-party artwork bundled into the app.
-
-## Appearance
-
-Use the sun/moon button in the header to switch between light and dark mode. KubeScope remembers the choice in your browser. On a new browser, it follows the operating system setting until you choose a theme. No theme assets are downloaded.
-
-## How commands work
-
-The backend uses `kubectl` with argument arrays, fixed timeouts, and an explicit command allowlist. It doesn't invoke a shell. It won't execute `apply`, `delete`, `patch`, `scale`, `exec`, or other arbitrary commands. The API binds to `127.0.0.1` only, and rejects non-local Host headers and cross-origin command submissions.
-
-That is a useful guardrail, **not** a replacement for Kubernetes RBAC. Use credentials with the minimum permissions you need. Anyone with access to your local browser session can see the resources and logs that your kubeconfig is authorized to read. See [SECURITY.md](SECURITY.md).
-
-## What isn't supported yet
-
-This build does not install into Kubernetes with Helm, run as a shared service, manage multiple users, or provide real-time metric streaming. Large clusters can take longer to load because the backend gathers a bounded snapshot using separate `kubectl` calls. Some resources may not appear if your account lacks permissions. The environment shown from a context name is only a hint, not proof of where you're connected.
-
-The interface and sample workflows were tested in demo mode. Live Kubernetes access still needs testing against real clusters before anyone should rely on it operationally.
-
-## Tests
-
-```bash
-python3 -m unittest discover -s tests -v
-```
-
-## Branches and development releases
-
-`main` contains just the public project overview and its image. All application code, CI workflows, tests, and detailed developer documentation belong on `dev`. Do not merge `dev` into `main` as part of a release.
-
-
-Use `dev` for development work. The first development snapshot was tagged `v1.0.0`. The light/dark mode update is `v1.0.1` on `dev`. It is marked as a pre-release on GitHub, even though the tag does not contain a pre-release suffix. The GitHub workflow publishes **pre-releases**, not stable releases, and checks that a tagged commit belongs to `dev` before publishing.
-
-To publish to a GitHub repository you own, add its URL as the `origin` remote and push the branch and tag:
-
-```bash
-git remote add origin git@github.com:YOUR_ORG/kubescope.git
-git push -u origin dev
-git push origin v1.0.0
-git push origin v1.0.1
-```
-
-Or run `./scripts/publish-dev.sh` after setting `origin`; it checks the branch, tag, clean working tree, and tests before pushing. Neither method is run by the app. See [RELEASE_NOTES.md](RELEASE_NOTES.md) for changes in this build.
-
-## Project files
-
-```text
-server.py                       Local API and kubectl integration
-static/index.html               App shell
-static/app.css                  UI styles
-static/app.js                   Views and resource workflows
-tests/test_server.py            Backend tests
-docs/screenshots/              UI previews (not required at runtime)
-.github/workflows/             Development checks and pre-releases
-```
-
-## Next up
-
-We're focusing on a smaller install, a smoother way to inspect real clusters, and clearer diagnostics before introducing write operations. A compiled CLI and an optional Helm deployment are future work, not part of this release.
+This is an evaluation preview, not a deployed Kubernetes tool.
