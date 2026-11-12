@@ -95,3 +95,56 @@ html,body{background:var(--bg);color:var(--ink);font-family:Inter,"Avenir Next",
 /* Keep cluster-wide maps scannable; full resource names remain in SVG titles and the inspector. */
 .topology-svg .graph-node-pod .node-text,.topology-svg .graph-node-service .node-text{opacity:0;transition:opacity .14s}
 .topology-svg .graph-node-pod:hover .node-text,.topology-svg .graph-node-service:hover .node-text,.topology-svg .graph-node-pod:focus .node-text,.topology-svg .graph-node-service:focus .node-text{opacity:1}
+
+/* Theme switch. Dark mode is independent of the cluster connection and adds no assets. */
+.theme-toggle{width:auto;min-width:40px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 12px;white-space:nowrap}
+.theme-glyph{font-size:19px;line-height:1}.theme-label{font-size:11px;font-weight:730}
+.theme-toggle:focus-visible{outline:3px solid #ad92f5;outline-offset:3px}
+:root[data-theme="dark"]{
+ color-scheme:dark;
+ --ink:#ebe5f7;--muted:#b6aeca;--soft:#a9a2b9;--border:#423651;
+ --bg:#14111f;--card:#211a2c;--blue:#c4a7ff;--teal:#5bd9c6;--red:#ff8b9c;
+ --amber:#f4bc77;--purple:#d6bfff;--nav:#100f1b;--nav-soft:#c1b3d8;
+ --shadow:0 15px 38px rgba(0,0,0,.20);
+}
+:root[data-theme="dark"] body,:root[data-theme="dark"] .main-frame{background:var(--bg);color:var(--ink)}
+:root[data-theme="dark"] .sidebar{background:#100e19;border-color:#362944}
+:root[data-theme="dark"] .topbar{background:#1c1726f2;border-color:var(--border)}
+:root[data-theme="dark"] .bread b,:root[data-theme="dark"] .header-field select{color:#f1e9ff}
+:root[data-theme="dark"] .bread,:root[data-theme="dark"] .header-field>span{color:#b4a7c6}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] .stat-card,:root[data-theme="dark"] .namespace-tile,
+:root[data-theme="dark"] .event-card,:root[data-theme="dark"] .node-card{background:var(--card);border-color:var(--border);color:var(--ink);box-shadow:var(--shadow)}
+:root[data-theme="dark"] .card-title,:root[data-theme="dark"] .page-title,
+:root[data-theme="dark"] .stat-num,:root[data-theme="dark"] .namespace-title{color:#eee9f9}
+:root[data-theme="dark"] .page-subtitle,:root[data-theme="dark"] .stat-foot,:root[data-theme="dark"] .card-desc,
+:root[data-theme="dark"] .stat-label,:root[data-theme="dark"] .info-row span:first-child{color:#b8abc8}
+:root[data-theme="dark"] .btn,:root[data-theme="dark"] .icon-button,
+:root[data-theme="dark"] input,:root[data-theme="dark"] select{background:#2a2136;color:#efe7fa;border-color:#594968}
+:root[data-theme="dark"] .btn:hover,:root[data-theme="dark"] .icon-button:hover{background:#393047;border-color:#876da7}
+:root[data-theme="dark"] .btn.primary{background:#7856c6;border-color:#9174dd;color:white}
+:root[data-theme="dark"] .hero-v2{background:linear-gradient(112deg,#302440,#312847 54%,#463249 100%);border-color:#665279;box-shadow:0 15px 35px #08051038}
+:root[data-theme="dark"] .hero-v2 h1{color:#f5eaff}
+:root[data-theme="dark"] .hero-v2 p,:root[data-theme="dark"] .hero-v2 .hero-eyebrow{color:#ddcbed}
+:root[data-theme="dark"] .hero-v2 .identity-chip{background:#352b43e8;border-color:#67547b;color:#e4d6f0}
+:root[data-theme="dark"] .hero-v2 .identity-chip b{color:#faf2ff}
+:root[data-theme="dark"] .resource-table th{background:#291f37;color:#bfb2d3}
+:root[data-theme="dark"] .resource-table td,:root[data-theme="dark"] .resource-table th,
+:root[data-theme="dark"] .info-row,:root[data-theme="dark"] .issue-row{border-color:#43354f}
+:root[data-theme="dark"] .resource-table tr:hover td{background:#31283e}
+:root[data-theme="dark"] .filter-tab,:root[data-theme="dark"] .search-box{background:#2b2237;color:#dbcff0;border-color:#574766}
+:root[data-theme="dark"] .filter-tab.active{background:#49336b;color:#f9ecff;border-color:#7556a9}
+:root[data-theme="dark"] .topology-card{background:radial-gradient(ellipse at 46% 45%,#30243d,#241b31 65%,#291d34 100%)}
+:root[data-theme="dark"] .topology-svg .orbit{stroke:#594968}
+:root[data-theme="dark"] .topology-svg .node-circle{fill:#2b2137}
+:root[data-theme="dark"] .topology-svg .topocenter{fill:#7a57c9;stroke:#c4a6f5}
+:root[data-theme="dark"] .topology-svg .symbol{fill:#d9bfff}
+:root[data-theme="dark"] .inspector{background:#20192a;color:#eee8f5}
+:root[data-theme="dark"] .inspector-top{background:linear-gradient(115deg,#382349,#5a3c7a)}
+:root[data-theme="dark"] .mobile-nav{background:#20192b;border-color:#4b3c58;box-shadow:0 -6px 20px #0003}
+:root[data-theme="dark"] .mobile-tab{color:#c4b3d8}
+:root[data-theme="dark"] .mobile-tab.active{color:#fff;background:#493568}
+:root[data-theme="dark"] .mode-badge{background:#153b34;color:#8af0d5}
+:root[data-theme="dark"] .mode-badge.demo{background:#47331e;color:#f6cd88}
+:root[data-theme="dark"] .notice,:root[data-theme="dark"] .toast{background:#34283f;color:#f3ebf9;border-color:#625073}
+@media(max-width:760px){.theme-label{display:none}.theme-toggle{min-width:37px;padding:0}}
+@media(max-width:630px){.theme-toggle{height:32px;min-width:32px}.topbar-r{gap:7px}.topbar{gap:8px}.header-field select{max-width:135px}}

@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light" />
+  <meta name="color-scheme" content="light dark" />
+  <script>try{let p=localStorage.getItem("kubescope-theme");document.documentElement.dataset.theme=p==="dark"||p==="light"?p:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
   <meta name="theme-color" content="#211734" />
   <title>KubeScope — Kubernetes Developer Workbench</title>
   <link rel="stylesheet" href="/app.css" />
@@ -26,7 +27,7 @@
     <div class="sidebar-bottom">
       <div class="guide-card"><div class="guide-label">YOUR CLUSTER, IN FOCUS</div><div class="guide-title">Less digging.<br />More doing.</div><p>Find the right cluster, follow what is running, and get to the problem.</p></div>
       <div class="connection-panel"><div class="connection-head"><span class="live-pulse"></span><span id="sidebar-mode">Connecting...</span></div><div id="sidebar-context" class="connection-name">—</div><div id="sidebar-provider" class="connection-hint">Loading cluster</div></div>
-      <div class="side-footer">KUBESCOPE <span>v0.2 DEV · READ ONLY</span></div>
+      <div class="side-footer">KUBESCOPE <span>v1.0.1 DEV · READ ONLY</span></div>
     </div>
   </aside>
   <div class="main-frame">
@@ -35,6 +36,7 @@
       <div class="topbar-r">
         <label class="header-field context-field"><span>CONNECTED CLUSTER</span><select id="context-select" aria-label="Kubernetes context"><option>Loading...</option></select></label>
         <label class="header-field ns-field"><span>NAMESPACE</span><select id="namespace-select" aria-label="Namespace"><option value="*">All namespaces</option></select></label>
+        <button id="theme-toggle" class="icon-button theme-toggle" type="button" title="Switch to dark mode" aria-label="Switch to dark mode" aria-pressed="false"><span class="theme-glyph" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button>
         <button id="refresh-btn" class="icon-button" data-action="refresh" title="Refresh cluster data (R)" aria-label="Refresh">↻</button>
         <span class="mode-badge" id="mode-badge">CONNECTING</span>
       </div>

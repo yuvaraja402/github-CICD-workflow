@@ -1,3 +1,13 @@
+# KubeScope v1.0.1 — Development update
+
+Added light and dark appearance modes. The header toggle switches instantly and remembers your preference in the browser. First-time visitors get their operating system preference. The UI changes without downloading any extra theme packages.
+
+No changes to Kubernetes commands or cluster permissions. The underlying v1.0.0 workbench still runs locally in read-only mode.
+
+This remains a development build. It has not been validated for production or multi-user deployment.
+
+---
+
 # KubeScope v1.0.0 — development preview
 
 This is the v1.0.0 development preview of KubeScope. The version identifies this release milestone; it does not mean the tool has been validated for production use.

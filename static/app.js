@@ -222,7 +222,26 @@ async function execute(){const c=state.console;const requires=commandNeedsResour
  catch(e){state.result={ok:false,code:-1,command:commandPreview(),output:e.message}}finally{state.busy=false;render()}}
 function runSimple(op){state.console.action=op;state.console.namespace=state.namespace;state.view='console';state.result=null;execute()}
 async function copyCommand(){try{await navigator.clipboard.writeText(commandPreview());toast('Command copied')}catch{toast('Copy unavailable in this browser')}}
-document.addEventListener('click',e=>{const node=e.target.closest('[data-view],[data-action]');if(!node)return;
+// Keep theme selection local to this browser. Without a saved choice, use the OS preference.
+function updateThemeToggle(){
+ const dark=document.documentElement.dataset.theme==='dark';
+ const button=el('theme-toggle');if(!button)return;
+ button.setAttribute('aria-pressed',String(dark));
+ button.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+ button.title=dark?'Switch to light mode':'Switch to dark mode';
+ const glyph=button.querySelector('.theme-glyph');if(glyph)glyph.textContent=dark?'☀':'☾';
+ const label=button.querySelector('.theme-label');if(label)label.textContent=dark?'Light mode':'Dark mode';
+ const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?'#131224':'#faf8fb';
+}
+function toggleTheme(){
+ const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
+ document.documentElement.dataset.theme=next;
+ try{localStorage.setItem('kubescope-theme',next)}catch(e){};
+ updateThemeToggle();
+}
+updateThemeToggle();
+document.addEventListener('click',e=>{if(e.target.closest('#theme-toggle')){toggleTheme();return}
+ const node=e.target.closest('[data-view],[data-action]');if(!node)return;
  if(node.dataset.view){state.view=node.dataset.view;state.selected=null;state.search='';render();window.scrollTo({top:0,behavior:'instant'});return}
  const op=node.dataset.action;
  if(op==='inspect'){state.selected=node.dataset.id;renderInspector();return}

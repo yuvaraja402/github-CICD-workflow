@@ -4,7 +4,7 @@ A local Kubernetes workbench for figuring out which cluster you're in, what's ru
 
 ![KubeScope overview](docs/screenshots/overview.jpg)
 
-> **Development build — v1.0.0.** This is a read-only prototype for individual developers. It isn't a hosted dashboard or a production-ready multi-user tool.
+> **Development build — v1.0.1.** This is a read-only prototype for individual developers. It isn't a hosted dashboard or a production-ready multi-user tool.
 
 ## Try it without a cluster
 
@@ -41,6 +41,10 @@ If port 8765 is taken, use `python3 server.py --port 8989`. Windows users can ru
 
 The new UI uses a lightweight, original SVG cluster illustration and CSS. There's no 3D engine to install, and no third-party artwork bundled into the app.
 
+## Appearance
+
+Use the sun/moon button in the header to switch between light and dark mode. KubeScope remembers the choice in your browser. On a new browser, it follows the operating system setting until you choose a theme. No theme assets are downloaded.
+
 ## How commands work
 
 The backend uses `kubectl` with argument arrays, fixed timeouts, and an explicit command allowlist. It doesn't invoke a shell. It won't execute `apply`, `delete`, `patch`, `scale`, `exec`, or other arbitrary commands. The API binds to `127.0.0.1` only, and rejects non-local Host headers and cross-origin command submissions.
@@ -64,14 +68,15 @@ python3 -m unittest discover -s tests -v
 `main` contains just the public project overview and its image. All application code, CI workflows, tests, and detailed developer documentation belong on `dev`. Do not merge `dev` into `main` as part of a release.
 
 
-Use `dev` for development work. This development pre-release uses the tag `v1.0.0`. It is marked as a pre-release on GitHub, even though the tag does not contain a pre-release suffix. The GitHub workflow publishes **pre-releases**, not stable releases, and checks that a tagged commit belongs to `dev` before publishing.
+Use `dev` for development work. The first development snapshot was tagged `v1.0.0`. The light/dark mode update is `v1.0.1` on `dev`. It is marked as a pre-release on GitHub, even though the tag does not contain a pre-release suffix. The GitHub workflow publishes **pre-releases**, not stable releases, and checks that a tagged commit belongs to `dev` before publishing.
 
 To publish to a GitHub repository you own, add its URL as the `origin` remote and push the branch and tag:
 
 ```bash
-git remote add origin git@github.com:yuvaraja402/github-CICD-workflow.git
+git remote add origin git@github.com:YOUR_ORG/kubescope.git
 git push -u origin dev
 git push origin v1.0.0
+git push origin v1.0.1
 ```
 
 Or run `./scripts/publish-dev.sh` after setting `origin`; it checks the branch, tag, clean working tree, and tests before pushing. Neither method is run by the app. See [RELEASE_NOTES.md](RELEASE_NOTES.md) for changes in this build.
